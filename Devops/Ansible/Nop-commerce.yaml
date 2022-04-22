@@ -7,7 +7,7 @@
       apt:
         update_cache: yes
     - name: Downloading dependecies for .NET Application
-      get_url:
+      ansible.builtin.get_url:
         url: https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
         dest: .
     - name: Installing dependecies for .NET Application
@@ -30,15 +30,15 @@
         name: nginx
         state: present
     - name: configuring nginx as a reverse proxy to forward requests to your ASP.NET Core app
-      template: 
+      ansible.builtin.template: 
         src: 'default.j2'
         dest: /etc/nginx/sites-available/default
     - name: Creating directiories for nop-commerce
-      file:
+      ansible.builtin.file:
         path: /var/www/nopCommerce450
         state: directory
     - name: Downloading nop-commerce
-      get_url:
+      ansible.builtin.get_url:
         url: https://github.com/nopSolutions/nopCommerce/releases/download/release-4.50.2/nopCommerce_4.50.2_NoSource_linux_x64.zip
         dest: /var/www/nopCommerce450
     - name: Installing Unzip
@@ -46,38 +46,38 @@
         name: unzip
         state: present
     - name: Unzipping nop-commerce
-      unarchive:
+      ansible.builtin.unarchive:
         src: /var/www/nopCommerce450/nopCommerce_4.50.2_NoSource_linux_x64.zip
         remote_src: yes
         dest: /var/www/nopCommerce450
     - name: Creating directiories for bin
-      file:
+      ansible.builtin.file:
         path: /var/www/nopCommerce450/bin
         state: directory
     - name: Creating directiories for bin
-      file:
+      ansible.builtin.file:
         path: /var/www/nopCommerce450/logs
         state: directory
     - name: changing the group and owner of nop-commerce directory
-      file:
+      ansible.builtin.file:
         path: /var/www/nopCommerce450
         state: directory
         group: www-data
         owner: www-data
         recurse: yes
     - name: configuring nginx as a reverse proxy to forward requests to your ASP.NET Core app
-      template: 
+      ansible.builtin.template: 
         src: 'nopCommerce450.service.j2'
         dest: /etc/systemd/system/nopCommerce450.service
     - name: Starting nginx webserver
-      systemd:
+      ansible.builtin.systemd:
         name: 'nginx.service'
         state: started
     - name: Starting nopCommerce450.service
-      systemd:
+      ansible.builtin.systemd:
         name: 'nopCommerce450.service'
         state: started
     - name: Starting nopCommerce450.service
-      systemd:
+      ansible.builtin.systemd:
         name: 'nopCommerce450.service'
         state: restarted
