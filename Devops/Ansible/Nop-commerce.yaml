@@ -44,6 +44,10 @@
       get_url:
         url: https://github.com/nopSolutions/nopCommerce/releases/download/release-4.50.2/nopCommerce_4.50.2_NoSource_linux_x64.zip
         dest: /var/www/nopCommerce450/
+    - name: Installing Unzip
+      apt:
+        name: unzip
+        state: present
     - name: Unzipping nop-commerce
       unarchive:
         src: /var/www/nopCommerce450/nopCommerce_4.50.2_NoSource_linux_x64.zip
