@@ -31,7 +31,7 @@
         state: present
     - name: configuring nginx as a reverse proxy to forward requests to your ASP.NET Core app
       template: 
-        src: default.j2
+        src: 'default.j2'
         dest: /etc/nginx/sites-available/default
     - name: Creating directiories for nop-commerce
       file:
@@ -67,17 +67,17 @@
         recurse: yes
     - name: configuring nginx as a reverse proxy to forward requests to your ASP.NET Core app
       template: 
-        src: nopCommerce450.service.j2
+        src: 'nopCommerce450.service.j2'
         dest: /etc/systemd/system/nopCommerce450.service
     - name: Starting nginx webserver
       systemd:
-        name: nginx
+        name: 'nginx.service'
         state: started
     - name: Starting nopCommerce450.service
       systemd:
-        name: nopCommerce450.service
+        name: 'nopCommerce450.service'
         state: started
     - name: Starting nopCommerce450.service
       systemd:
-        name: nopCommerce450.service
+        name: 'nopCommerce450.service'
         state: restarted
