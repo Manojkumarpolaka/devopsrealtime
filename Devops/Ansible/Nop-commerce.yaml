@@ -37,9 +37,6 @@
       file:
         path: /var/www/nopCommerce450
         state: directory
-        group: www-data
-        owner: www-data
-        recurse: yes
     - name: Downloading nop-commerce
       get_url:
         url: https://github.com/nopSolutions/nopCommerce/releases/download/release-4.50.2/nopCommerce_4.50.2_NoSource_linux_x64.zip
@@ -61,6 +58,13 @@
       file:
         path: /var/www/nopCommerce450/logs
         state: directory
+    - name: changing the group and owner of nop-commerce directory
+      file:
+        path: /var/www/nopCommerce450
+        state: directory
+        group: www-data
+        owner: www-data
+        recurse: yes
     - name: configuring nginx as a reverse proxy to forward requests to your ASP.NET Core app
       template: 
         src: nopCommerce450.service.j2
