@@ -2,6 +2,9 @@
 - name: Deploying nop-commerce website
   hosts: all
   become: yes
+  vars:
+    - installation_directory: /var/www/nopCommerce450
+    - nop_service_directory: /etc/systemd/system
   tasks:
     - name: Updating Repository urls
       apt:
@@ -17,11 +20,6 @@
       apt:
         name:
           - apt-transport-https
-        update_cache: no
-        state: present
-    - name: Install .NET 
-      apt:
-        name:
           - aspnetcore-runtime-6.0
         update_cache: yes
         state: present
@@ -35,32 +33,32 @@
         dest: /etc/nginx/sites-available/default
     - name: Creating directiories for nop-commerce
       ansible.builtin.file:
-        path: /var/www/nopCommerce450
+        path: "{{installation_directory}}"
         state: directory
     - name: Downloading nop-commerce
       ansible.builtin.get_url:
         url: https://github.com/nopSolutions/nopCommerce/releases/download/release-4.50.2/nopCommerce_4.50.2_NoSource_linux_x64.zip
-        dest: /var/www/nopCommerce450
+        dest: "{{installation_directory}}"
     - name: Installing Unzip
       apt:
         name: unzip
         state: present
     - name: Unzipping nop-commerce
       ansible.builtin.unarchive:
-        src: /var/www/nopCommerce450/nopCommerce_4.50.2_NoSource_linux_x64.zip
+        src: "{{installation_directory}}/nopCommerce_4.50.2_NoSource_linux_x64.zip"
         remote_src: yes
-        dest: /var/www/nopCommerce450
+        dest: "{{installation_directory}}"
     - name: Creating directiories for bin
       ansible.builtin.file:
-        path: /var/www/nopCommerce450/bin
+        path: "{{installation_directory}}/bin"
         state: directory
     - name: Creating directiories for bin
       ansible.builtin.file:
-        path: /var/www/nopCommerce450/logs
+        path: "{{installation_directory}}/logs"
         state: directory
     - name: changing the group and owner of nop-commerce directory
       ansible.builtin.file:
-        path: /var/www/nopCommerce450
+        path: "{{installation_directory}}"
         state: directory
         group: www-data
         owner: www-data
@@ -68,7 +66,7 @@
     - name: configuring nginx as a reverse proxy to forward requests to your ASP.NET Core app
       ansible.builtin.template: 
         src: 'nopCommerce450.service.j2'
-        dest: /etc/systemd/system/nopCommerce450.service
+        dest: "{{nop_service_directory}}/nopCommerce450.service"
     - name: Starting nginx webserver
       ansible.builtin.systemd:
         name: 'nginx.service'
